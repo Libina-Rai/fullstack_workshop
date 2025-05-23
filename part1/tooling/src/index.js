@@ -1,14 +1,8 @@
-let sentence = (props) =>{
-  return React.createElement("h1",{id:"header"},`This is a pure ${props.lasWord}`);
-}
-let App = () => {
-  return React.createElement(
-    "div",
-    {},
-    [React.createElement(sentence, {lasWord: "React"}),
-    React.createElement(sentence, {lasWord: "javascript"})]
-  ); 
-};
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+
 let container = document.getElementById('Root');
 let root = ReactDOM.createRoot(container);
 // root.render(App());//function call
