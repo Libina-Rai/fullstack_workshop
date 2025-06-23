@@ -6,14 +6,14 @@ const App = () => {
   //   setCounter(counter + 1);
   //   console.log(counter);
   //  }, 1000);
- 
-const incrementCounter = () => {
-  setCounter(counter + 1);
-}
+
+  const incrementCounter = () => {
+    setCounter(counter + 1);
+  };
 
   return (
     <div>
-      <Display counter={counter}/>
+      <Display counter={counter} />
       <button onClick={incrementCounter}>Plus-One</button>
     </div>
   );
