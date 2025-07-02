@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Display from "./Display";
 import MyButton from "./MyButton";
 import History from "./History";
 
@@ -18,7 +17,10 @@ const App = () => {
       left: newLeft,
       right: clicks.right,
     };
+    console.log(clicks);
+    debugger;
     setClicks(newState);
+    console.log(clicks);
     setHistory(clickHistory.concat("L"));
     setTotal(newLeft + clicks.right);
   };
@@ -36,7 +38,7 @@ const App = () => {
       <MyButton someFunction={increaseByOneLeft} text={"Left"} />
       {clicks.right}
       <MyButton someFunction={increaseByOneRight} text={"Right"} />
-      <History history={clickHistory}/>
+      <History history={clickHistory} />
       <div>total clicks: {totalClicks}</div>
     </div>
   );
