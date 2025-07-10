@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Note from "./components/Note";
 
 const App = (props) => {
   const [notes, setNotes] = useState(props.notes);
   const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
+
+  useEffect(() => {
+    console.log("hello");// log when newNote state changes
+  }, [newNote]);
 
   const notesToShow = notes.filter((note) => (showAll ? true : note.important));
 
@@ -50,4 +54,3 @@ const App = (props) => {
 };
 
 export default App;
-
