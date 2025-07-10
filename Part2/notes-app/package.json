@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
+    "server":"json-server --watch db.json --port 3001",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet"
   },
   "keywords": [],
@@ -20,6 +21,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.31.8",
+    "json-server": "^1.0.0-beta.3",
     "vite": "^3.1.4"
   },
   "dependencies": {
@@ -27,4 +29,3 @@
     "react-dom": "^18.2.0"
   }
 }
-
