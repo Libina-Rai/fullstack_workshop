@@ -1,11 +1,13 @@
 import { useState } from "react";
 import Note from "./components/Note";
+
 const App = (props) => {
   const [notes, setNotes] = useState(props.notes);
   const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
 
   const notesToShow = notes.filter((note) => (showAll ? true : note.important));
+
   const handleSubmit = (event) => {
     event.preventDefault();
     setNotes(
@@ -27,6 +29,7 @@ const App = (props) => {
   const handleShowAll = () => {
     setShowAll(!showAll);
   };
+
   return (
     <div>
       <h1>Notes</h1>
@@ -47,3 +50,4 @@ const App = (props) => {
 };
 
 export default App;
+
