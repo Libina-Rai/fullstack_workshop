@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Note from "./components/Note";
 import axios from "axios";
 
-const App = (props) => {
+const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
@@ -22,14 +22,16 @@ const App = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setNotes(
-      notes.concat({
-        content: newNote,
-        id: notes.length + 1,
-        important: Math.random() > 0.5,
-      })
-    );
-    setNewNote("");
+    let myNote = {
+      content: newNote,
+      important: Math.random() > 0.5,
+    };
+    let postPromise = axios.post("http://localhost:3001/notes", myNote);
+    postPromise.then((result) => {
+      console.log("note created data return", result.data);
+      setNotes(notes.concat(result.data));
+      setNewNote("");
+    });
     console.log("form has been submitted");
   };
 
