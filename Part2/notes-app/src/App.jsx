@@ -12,11 +12,14 @@ const App = () => {
     //1. get data from backend server
     let myAxiosPromise = noteService.getAll();
     myAxiosPromise.then((myData) => {
-      console.log("return promise");
+      console.log("returned promise");
       console.dir(myData);
+      myData.push({ id: 1000, content: "this is fake note", important: true });
       //2. put the data into notes state
       setNotes(myData);
     });
+
+    console.log(myAxiosPromise);
   }, []);
 
   const notesToShow = notes.filter((note) => (showAll ? true : note.important));
@@ -29,6 +32,7 @@ const App = () => {
     };
     let postPromise = noteService.create(myNote);
     postPromise.then((result) => {
+      console.dir(result);
       console.log("note created data return", result.data);
       setNotes(notes.concat(result.data));
       setNewNote("");
@@ -52,13 +56,26 @@ const App = () => {
     });
     let updatedNote = { ...currentNote, important: !currentNote.important };
     let putPromise = noteService.update(id, updatedNote);
-    putPromise.then((result) => {
-      console.dir(result);
-      //2. update the state
-      setNotes(
-        notes.map((note) => (note.id === updatedNote.id ? updatedNote : note))
-      );
-    });
+    putPromise
+      .then((result) => {
+        console.dir(result);
+        let updatedNote = result.data;
+        //2. update the state
+        setNotes(
+          notes.map((note) => (note.id === updatedNote.id ? updatedNote : note))
+        );
+      })
+      .catch((err) => {
+        console.log("some error here");
+        console.dir(err);
+        if (err.response.status === 404) {
+          console.log("this means the id does not exist in the server");
+          alert(`sorry this note "${currentNote.content}" does not exist`);
+          setNotes(notes.filter((note) => note.id !== currentNote.id));
+        } else {
+          console.log("this is some other error");
+        }
+      });
   };
 
   return (
