@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
-    "server": "json-server --watch db.json --port 3001",
+    "server": "json-server --watch db.json --port 3003",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet"
   },
   "keywords": [],
