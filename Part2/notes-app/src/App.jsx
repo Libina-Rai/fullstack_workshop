@@ -44,22 +44,49 @@ const App = () => {
     setShowAll(!showAll);
   };
 
+  const updateData = (id) => {
+    //1. update the server
+    let currentNote = notes.find((note) => {
+      return note.id === id;
+    });
+    let updatedNote = { ...currentNote, important: !currentNote.important };
+    let putPromise = axios.put(
+      `http://localhost:3001/notes/${id}`,
+      updatedNote
+    );
+    putPromise.then((result) => {
+      console.dir(result);
+      //2. update the state
+      setNotes(
+        notes.map((note) => (note.id === updatedNote.id ? updatedNote : note))
+      );
+    });
+  };
+
   return (
-    <div>
+    <>
       <h1>Notes</h1>
       <button onClick={handleShowAll}>
         show {showAll ? "important" : "all"}
       </button>
       <ul>
         {notesToShow.map((value) => {
-          return <Note key={value.id} note={value} />;
+          return (
+            <Note
+              key={value.id}
+              note={value}
+              updateNote={() => {
+                updateData(value.id);
+              }}
+            />
+          );
         })}
       </ul>
       <form onSubmit={handleSubmit}>
         <input value={newNote} onChange={handleChange} />
         <button>Submit</button>
       </form>
-    </div>
+    </>
   );
 };
 
