@@ -8,18 +8,13 @@ const App = () => {
   const [showAll, setShowAll] = useState(true);
 
   useEffect(() => {
-    console.log("hello");
     //1. get data from backend server
     let myAxiosPromise = noteService.getAll();
     myAxiosPromise.then((myData) => {
-      console.log("returned promise");
-      console.dir(myData);
       myData.push({ id: 1000, content: "this is fake note", important: true });
       //2. put the data into notes state
       setNotes(myData);
     });
-
-    console.log(myAxiosPromise);
   }, []);
 
   const notesToShow = notes.filter((note) => (showAll ? true : note.important));
@@ -32,16 +27,12 @@ const App = () => {
     };
     let postPromise = noteService.create(myNote);
     postPromise.then((result) => {
-      console.dir(result);
-      console.log("note created data return", result.data);
       setNotes(notes.concat(result.data));
       setNewNote("");
     });
-    console.log("form has been submitted");
   };
 
   const handleChange = (event) => {
-    console.log(event.target.value);
     setNewNote(event.target.value);
   };
 
@@ -66,10 +57,7 @@ const App = () => {
         );
       })
       .catch((err) => {
-        console.log("some error here");
-        console.dir(err);
         if (err.response.status === 404) {
-          console.log("this means the id does not exist in the server");
           alert(`sorry this note "${currentNote.content}" does not exist`);
           setNotes(notes.filter((note) => note.id !== currentNote.id));
         } else {
