@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import "./index.css";
 
 let Notes = [
   { id: 1, content: "note 1", important: true },
@@ -9,4 +10,4 @@ let Notes = [
 
 const container = document.getElementById("root");
 const root = createRoot(container);
-root.render(<App notes={Notes}/>);
+root.render(<App notes={Notes} />);

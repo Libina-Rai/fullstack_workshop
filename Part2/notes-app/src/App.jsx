@@ -66,9 +66,11 @@ const App = () => {
       });
   };
 
+  const myStyle ={fontSize: "50px"}
+
   return (
     <>
-      <h1>Notes</h1>
+      <h1 style={myStyle} className="redbackground">Notes</h1>
       <button onClick={handleShowAll}>
         show {showAll ? "important" : "all"}
       </button>
