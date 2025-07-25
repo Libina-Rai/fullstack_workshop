@@ -27,6 +27,16 @@ app.get("/api/notes", (request, response) =>{
   response.json(notes);
 })
 
+app.get("/api/notes/:id", (request, response) =>{
+  const myId =(request.params.id);
+  const myNote = notes.find((note) => note.id === myId);
+  if(myNote){
+    response.json(myNote);
+  } else {
+    response.status(404).send(`Note with id ${myId} not found`);
+  }
+  
+})
 
 const PORT = 3001;
 app.listen(PORT);
