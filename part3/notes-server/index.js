@@ -38,6 +38,13 @@ app.get("/api/notes/:id", (request, response) =>{
   
 })
 
+app.delete("/api/notes/:id", (request, response) =>{
+  const myId =(request.params.id);
+  notes = notes.filter((note) => note.id !== myId);
+  
+    response.status(404).send(`The note at id ${myId} has been deleted`);
+});
+
 const PORT = 3001;
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);
