@@ -1,6 +1,28 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config();
+
+const url = process.env.MONGODB_URI;
+
+mongoose.set("strictQuery", false);
+mongoose.connect(url);
+
+const noteSchema = new mongoose.Schema({
+  content: String,
+  important: Boolean,
+});
+
+noteSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
+const Note = mongoose.model("Note", noteSchema);
 
 app.use(express.json());
 app.use(cors());
@@ -16,28 +38,12 @@ const requestLogger = (request, response, next) => {
 
 app.use(requestLogger);
 
-let notes = [
-  {
-    id: "1",
-    content: "HTML is easy",
-    important: true,
-  },
-  {
-    id: "2",
-    content: "Browser can execute only JavaScript",
-    important: false,
-  },
-  {
-    id: "3",
-    content: "GET and POST are the most important methods of HTTP protocol",
-    important: true,
-  },
-];
-
-
+let notes = [];
 
 app.get("/api/notes", (request, response) => {
-  response.json(notes);
+  Note.find({}).then((result) => {
+    response.json(result);
+  });
 });
 
 app.get("/api/notes/:id", (request, response) => {
@@ -62,14 +68,22 @@ app.post("/api/notes", (request, response) => {
   myNewPost.id = notes.length + 1;
   notes.push(myNewPost);
   response.status(201).json(myNewPost);
+
+  //   const note = new Note({
+  //   content: 'HTML is easy',
+  //   important: true,
+  // })
+
+  // note.save().then(result => {
+  //   console.log('note saved!')
+  //   mongoose.connection.close()
+  // })
 });
-
-
 
 app.use((request, response, next) => {
   response.status(404).send("no code available to handle this request");
 });
 
-const PORT = process.env.PORT ? process.env.PORT : 3001;
-app.listen(PORT);
-console.log(`Server running on port ${PORT}`);
+
+app.listen(process.env.PORT);
+console.log(`Server running on port ${process.env.PORT}`);
