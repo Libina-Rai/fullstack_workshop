@@ -98,7 +98,11 @@ const App = () => {
         })}
       </ul>
       <form onSubmit={handleSubmit}>
-        <input value={newNote} onChange={handleChange} />
+        <input
+          value={newNote}
+          onChange={handleChange}
+          onClick={() => setNewNote("")}
+        />
         <button>Submit</button>
       </form>
     </>
