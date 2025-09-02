@@ -1,30 +1,41 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-if (process.argv.length < 3) {
-  console.log('give password as argument')
-  process.exit(1)
-}
+const url = process.env.MONGODB_URI;
 
-const password = process.argv[2]
-
-const url = process.env.MONGODB_URI
-
-mongoose.set('strictQuery',false)
-mongoose.connect(url)
+mongoose.set("strictQuery", false);
+mongoose
+  .connect(url)
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((error) => {
+    console.error("error connecting to MongoDB:", error.message);
+  });
 
 const noteSchema = new mongoose.Schema({
   content: String,
   important: Boolean,
-})
+});
 
-const Note = mongoose.model('Note', noteSchema)
+const Note = mongoose.model("Note", noteSchema);
 
-const note = new Note({
-  content: 'HTML is easy',
-  important: true,
-})
+// If you want to add a note when running `node mongo.js "your note"`
+const content = process.argv[2];
 
-note.save().then(result => {
-  console.log('note saved!')
-  mongoose.connection.close()
-})
+if (content) {
+  const note = new Note({
+    content,
+    important: true,
+  });
+
+  note.save().then(() => {
+    console.log("note saved!");
+    mongoose.connection.close();
+  });
+} else {
+  Note.find({}).then((notes) => {
+    notes.forEach((note) => console.log(note));
+    mongoose.connection.close();
+  });
+}

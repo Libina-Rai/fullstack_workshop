@@ -1,29 +1,12 @@
 const express = require("express");
-const app = express();
 const cors = require("cors");
-const mongoose = require("mongoose");
 require("dotenv").config();
+const Note = require("./model/note"); // import model
 
-const url = process.env.MONGODB_URI;
+const app = express();
+const PORT = process.env.PORT || 3001;
 
-mongoose.set("strictQuery", false);
-mongoose.connect(url);
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-});
-
-noteSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
-
-const Note = mongoose.model("Note", noteSchema);
-
+// --- Middleware ---
 app.use(express.json());
 app.use(cors());
 app.use(express.static("dist"));
@@ -38,27 +21,23 @@ const requestLogger = (request, response, next) => {
 
 app.use(requestLogger);
 
-let notes = [];
-
+// --- Routes ---
 app.get("/api/notes", (request, response) => {
   Note.find({}).then((result) => {
     response.json(result);
   });
 });
 
-app.get("/api/notes/:id", (request, response) => {
+app.get("/api/notes/:id", (request, response, next) => {
   Note.findById(request.params.id)
     .then((result) => {
       if (result) {
         response.json(result);
       } else {
-        response.status(404).send(`There are no notes at ${request.params.id}`);
+        response.status(404).send(`No note found at id ${request.params.id}`);
       }
     })
-    .catch((e) => {
-      next(e);
-      // response.status(500).send(`${request.params.id} is not in the required format`);
-    });
+    .catch((error) => next(error));
 });
 
 app.put("/api/notes/:id", (request, response, next) => {
@@ -69,7 +48,7 @@ app.put("/api/notes/:id", (request, response, next) => {
     important: body.important,
   };
 
-  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+  Note.findByIdAndUpdate(request.params.id, note, { new: true, runValidators: true })
     .then((updatedNote) => {
       response.json(updatedNote);
     })
@@ -78,16 +57,16 @@ app.put("/api/notes/:id", (request, response, next) => {
 
 app.delete("/api/notes/:id", (request, response, next) => {
   Note.findByIdAndRemove(request.params.id)
-    .then((result) => {
+    .then(() => {
       response.status(204).end();
     })
     .catch((error) => next(error));
 });
 
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", (request, response, next) => {
   const body = request.body;
 
-  if (body.content === undefined) {
+  if (!body.content) {
     return response.status(400).json({ error: "content missing" });
   }
 
@@ -96,26 +75,31 @@ app.post("/api/notes", (request, response) => {
     important: body.important || false,
   });
 
-  note.save().then((savedNote) => {
-    response.json(savedNote);
-  });
+  note.save()
+    .then((savedNote) => response.json(savedNote))
+    .catch((error) => next(error));
 });
 
-app.use((request, response, next) => {
-  response.status(404).send("no code available to handle this request");
+// --- Unknown endpoint handler ---
+app.use((request, response) => {
+  response.status(404).send("No route found to handle this request");
 });
 
+// --- Error handler (last middleware) ---
 const errorHandler = (error, request, response, next) => {
   console.error(error.message);
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
+
   next(error);
 };
-
-//this has to be the last loaded middleware.
 app.use(errorHandler);
 
-app.listen(process.env.PORT);
-console.log(`Server running on port ${process.env.PORT}`);
+// --- Start server ---
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
