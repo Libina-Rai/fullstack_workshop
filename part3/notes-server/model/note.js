@@ -16,4 +16,6 @@ noteSchema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Note", noteSchema);
+const Note = mongoose.model("Notes", noteSchema);
+
+module.exports = Note;
