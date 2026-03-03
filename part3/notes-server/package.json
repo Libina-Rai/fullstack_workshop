@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test node --test",
+    "test-only": "cross-env NODE_ENV=test node --test --test-only",
     "dev": "nodemon index.js",
     "prod": "node index.js",
     "lint": "eslint ."
