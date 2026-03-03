@@ -1,62 +1,82 @@
-const Note = require("../model/note"); // import model
+const Note = require("../model/note");
 const notesRouter = require("express").Router();
 
-notesRouter.get("/", (request, response) => {
-  Note.find({}).then((result) => {
+// GET all notes
+notesRouter.get("/", async (request, response, next) => {
+  try {
+    const result = await Note.find({});
     response.json(result);
-  });
-});
-
-notesRouter.get("/:noteid", (request, response, next) => {
-  Note.findById(request.params.noteid)
-    .then((result) => {
-      if (result) {
-        response.json(result);
-      } else {
-        response.status(404).send(`No note found at id ${request.params.id}`);
-      }
-    })
-    .catch((error) => next(error));
-});
-
-notesRouter.put("/:id", (request, response, next) => {
-  const body = request.body;
-
-  const note = {
-    content: body.content,
-    important: body.important,
-  };
-
-  Note.findByIdAndUpdate(request.params.id, note, { new: true, runValidators: true })
-    .then((updatedNote) => {
-      response.json(updatedNote);
-    })
-    .catch((error) => next(error));
-});
-
-notesRouter.delete("/:noteid", (request, response, next) => {
-  Note.findByIdAndRemove(request.params.noteid)
-    .then(() => {
-      response.status(204).end();
-    })
-    .catch((error) => next(error));
-});
-
-notesRouter.post("/", (request, response, next) => {
-  const body = request.body;
-
-  if (!body.content) {
-    return response.status(400).json({ error: "content missing" });
+  } catch (error) {
+    next(error);
   }
+});
 
-  const note = new Note({
-    content: body.content,
-    important: body.important || false,
-  });
+// GET single note
+notesRouter.get("/:noteid", async (request, response, next) => {
+  try {
+    const result = await Note.findById(request.params.noteid);
 
-  note.save()
-    .then((savedNote) => response.json(savedNote))
-    .catch((error) => next(error));
+    if (result) {
+      response.json(result);
+    } else {
+      response.status(404).send(`No note found at id ${request.params.noteid}`);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// UPDATE note
+notesRouter.put("/:id", async (request, response, next) => {
+  try {
+    const body = request.body;
+
+    const note = {
+      content: body.content,
+      important: body.important,
+    };
+
+    const updatedNote = await Note.findByIdAndUpdate(
+      request.params.id,
+      note,
+      { new: true, runValidators: true }
+    );
+
+    response.json(updatedNote);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// DELETE note
+notesRouter.delete("/:noteid", async (request, response, next) => {
+  try {
+    await Note.findByIdAndRemove(request.params.noteid);
+    response.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+});
+
+// CREATE note
+notesRouter.post("/", async (request, response, next) => {
+  try {
+    const body = request.body;
+
+    if (!body.content) {
+      return response.status(400).json({ error: "content missing" });
+    }
+
+    const note = new Note({
+      content: body.content,
+      important: body.important || false,
+    });
+
+    const savedNote = await note.save();
+    response.json(savedNote);
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = notesRouter;
