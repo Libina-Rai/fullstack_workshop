@@ -11,6 +11,9 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static("dist"));
 
+console.log("the port is", process.env.PORT);
+console.log("the environment is", process.env.NODE_ENV);
+
 mongoose.connect(config.MONGODB_URI)
   .then(( ) => {
     console.log("connected to MongoDB");
