@@ -4,10 +4,29 @@ GET http://localhost:3001/api/notes/
 ###   
 GET http://localhost:3001/api/notes/1
 ###
-POST http://localhost:3001/api/notes/
+POST http://localhost:3001/api/notes
 content-type: application/json
 
 {
-    "content": "sample",
-    "important": false
+    "content": "another sample",
+    "important": false,
+    "userId": "69a7d0a3c021b455ba20fa6b"
+}
+
+### GET all users
+GET http://localhost:3001/api/users
+###
+
+# GET a single user by ID (replace <id> with real MongoDB ID)
+GET http://localhost:3001/api/users
+###
+
+# CREATE new user
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username": "priya_rai33",
+    "name": "Priya Rai",
+    "password": "123456"
 }
