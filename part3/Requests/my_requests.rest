@@ -11,3 +11,21 @@ content-type: application/json
     "content": "sample",
     "important": false
 }
+
+# GET all users
+GET http://localhost:3001/api/users
+###
+
+# GET a single user by ID (replace <id> with real MongoDB ID)
+GET http://localhost:3001/api/users
+###
+
+# CREATE new user
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username": "libina",
+    "name": "Libina Rai",
+    "password": "123456"
+}
