@@ -1,20 +1,19 @@
 import axios from "axios";
-
-const baseUrl =
-  import.meta.env.MODE === "production"
-    ? "/api/notes" // On Render: same origin
-    : "http://localhost:3001/api/notes"; // On local: backend
+const baseUrl = "/api/notes"; // On Render: same origin, On local: backend proxy
 
 const getAll = () => {
-  return axios.get(baseUrl).then((result) => result.data);
+  const request = axios.get(baseUrl);
+  return request.then((response) => response.data.concat({ id: 100, content: "This is fake", important: true }));
 };
 
-const create = (note) => {
-  return axios.post(baseUrl, note).then((result) => result.data);
+const create = (newObject) => {
+  const request = axios.post(baseUrl, newObject);
+  return request.then((response) => response.data);
 };
 
-const update = (id, updatedNote) => {
-  return axios.put(`${baseUrl}/${id}`, updatedNote).then((result) => result.data);
+const update = (id, newObject) => {
+  const request = axios.put(`${baseUrl}/${id}`, newObject);
+  return request.then((response) => response.data);
 };
 
 export default { create, getAll, update };

@@ -1,0 +1,11 @@
+import axios from "axios";
+const baseUrl = "/api/logins"; // On Render: same origin, On local: backend proxy
+
+const login = (newObject) => {
+  const request = axios.post(baseUrl, newObject);
+  return request.then((response) => response.data);
+};
+
+
+
+export default { login };
