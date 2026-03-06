@@ -6,11 +6,11 @@ GET http://localhost:3001/api/notes/1
 ###
 POST http://localhost:3001/api/notes
 content-type: application/json
+Authorization: Bearer <PASTE_TOKEN_HERE>
 
 {
-    "content": "another sample",
-    "important": false,
-    "userId": "69a7d0a3c021b455ba20fa6b"
+    "content": "another sample1",
+    "important": false
 }
 
 ### GET all users
@@ -29,4 +29,13 @@ Content-Type: application/json
     "username": "priya_rai33",
     "name": "Priya Rai",
     "password": "123456"
+}
+
+### login
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "priya_rai33",
+  "password": "123456"
 }
