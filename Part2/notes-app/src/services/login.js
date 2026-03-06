@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "/api/logins"; // On Render: same origin, On local: backend proxy
+const baseUrl = "/api/login"; // On Render: same origin, On local: backend proxy
 
 const login = (newObject) => {
   const request = axios.post(baseUrl, newObject);

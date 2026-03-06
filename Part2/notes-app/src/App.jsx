@@ -21,6 +21,7 @@ const App = () => {
       //2. put the data into notes state
       setNotes(myData);
     });
+      setUser(JSON.parse(window.localStorage.getItem("myAuth")));
   }, []);
 
   const notesToShow = notes.filter((note) => (showAll ? true : note.important));
@@ -83,6 +84,8 @@ const App = () => {
     event.preventDefault();
     let myUser= await userService.login({username, password});
     setUser(myUser);
+    noteService.setToken(myUser.token);
+    window.localStorage.setItem("myAuth", JSON.stringify(myUser));
   }
 
   function loginForm() {
