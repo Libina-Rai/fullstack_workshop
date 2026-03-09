@@ -26,8 +26,8 @@ POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-    "username": "priya_rai33",
-    "name": "Priya Rai",
+    "username": "riya_rai2",
+    "name": "riya Rai",
     "password": "123456"
 }
 
@@ -39,3 +39,4 @@ Content-Type: application/json
   "username": "priya_rai33",
   "password": "123456"
 }
+

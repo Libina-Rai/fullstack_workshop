@@ -1,20 +1,29 @@
-import axios from "axios";
+import axios from "axios"; 
+const baseUrl = "/api/notes"; // On Render: same origin, On local: backend proxy
 
-const baseUrl =
-  import.meta.env.MODE === "production"
-    ? "/api/notes" // On Render: same origin
-    : "http://localhost:3001/api/notes"; // On local: backend
+let token = null;
+function setToken (newToken) {
+  token = newToken;
+}
 
 const getAll = () => {
-  return axios.get(baseUrl).then((result) => result.data);
+  const request = axios.get(baseUrl);
+  return request.then((response) => response.data.concat({ id: 100, content: "This is fake", important: true }));
 };
 
-const create = (note) => {
-  return axios.post(baseUrl, note).then((result) => result.data);
+const create = (newObject) => {
+  const authObj={
+    headers: {      
+    Authorization: `Bearer ${token}`
+    }
+  }
+  const request = axios.post(baseUrl, newObject, authObj);
+  return request.then((response) => response.data);
 };
 
-const update = (id, updatedNote) => {
-  return axios.put(`${baseUrl}/${id}`, updatedNote).then((result) => result.data);
+const update = (id, newObject) => {
+  const request = axios.put(`${baseUrl}/${id}`, newObject);
+  return request.then((response) => response.data);
 };
 
-export default { create, getAll, update };
+export default { create, getAll, update, setToken };
