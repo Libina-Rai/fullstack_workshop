@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Note from "./components/Note";
 import noteService from "./services/notes";
 import userService from "./services/login";
@@ -14,6 +14,7 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null);
+  const noteFormRef = useRef();
 
   useEffect(() => {
      const fetchNotes = async () => {   
@@ -29,6 +30,7 @@ const App = () => {
   const notesToShow = notes.filter((note) => (showAll ? true : note.important));
 
    const createNote = async (noteObject) => {
+    noteFormRef.current.toggleVisibility();
     try {
       const newNote = await noteService.create(noteObject);  // returns response.data now
       if (newNote && newNote.id) {
@@ -118,7 +120,7 @@ const App = () => {
 
   function notesForm() {
     return (
-      <Togglable buttonLabel="New Note">
+      <Togglable buttonLabel="New Note" ref={noteFormRef}>
         <NotesForm
           createNote={createNote}
         />
