@@ -5,10 +5,10 @@ import userService from "./services/login";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import Togglable from "./components/Togglable";
+import NotesForm from "./components/NotesForm";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
   const [notification, setNotification] = useState("");
   const [username, setUsername] = useState('') 
@@ -28,21 +28,16 @@ const App = () => {
 
   const notesToShow = notes.filter((note) => (showAll ? true : note.important));
 
-  const handleSubmit = async (event) => {   
-    event.preventDefault();
-
-    const myNote = {
-      content: newNote,
-      important: Math.random() > 0.5,
-    };
-
-    const result = await noteService.create(myNote);   
-    setNotes(notes.concat(result));                    
-    setNewNote("");
-  };
-
-  const handleChange = (event) => {
-    setNewNote(event.target.value);
+   const createNote = async (noteObject) => {
+    try {
+      const newNote = await noteService.create(noteObject);  // returns response.data now
+      if (newNote && newNote.id) {
+        setNotes(notes.concat(newNote));
+      }
+    } catch (err) {
+      setNotification('Error creating note');
+      setTimeout(() => setNotification(''), 2000);
+    }
   };
 
   const handleShowAll = () => {
@@ -123,14 +118,11 @@ const App = () => {
 
   function notesForm() {
     return (
-      <form onSubmit={handleSubmit}>
-        <input
-          value={newNote}
-          onChange={handleChange}
-          onClick={() => setNewNote("")}
+      <Togglable buttonLabel="New Note">
+        <NotesForm
+          createNote={createNote}
         />
-        <button>Submit</button>
-      </form>
+      </Togglable>
     );
   }
 
