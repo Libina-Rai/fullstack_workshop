@@ -14,29 +14,29 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    //1. get data from backend server
-    let myAxiosPromise = noteService.getAll();
-    myAxiosPromise.then((myData) => {
+     const fetchNotes = async () => {   
+      const myData = await noteService.getAll();   
       myData.push({ id: 1000, content: "this is fake note", important: true });
-      //2. put the data into notes state
       setNotes(myData);
-    });
-      setUser(JSON.parse(window.localStorage.getItem("myAuth")));
+    };
+
+    fetchNotes();
+
   }, []);
 
   const notesToShow = notes.filter((note) => (showAll ? true : note.important));
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {   
     event.preventDefault();
-    let myNote = {
+
+    const myNote = {
       content: newNote,
       important: Math.random() > 0.5,
     };
-    let postPromise = noteService.create(myNote);
-    postPromise.then((result) => {
-      setNotes(notes.concat(result.data));
-      setNewNote("");
-    });
+
+    const result = await noteService.create(myNote);   
+    setNotes(notes.concat(result));                    
+    setNewNote("");
   };
 
   const handleChange = (event) => {
@@ -47,44 +47,58 @@ const App = () => {
     setShowAll(!showAll);
   };
 
-  const updateData = (id) => {
-    //1. update the server
-    let currentNote = notes.find((note) => {
-      return note.id === id;
-    });
-    let updatedNote = { ...currentNote, important: !currentNote.important };
-    let putPromise = noteService.update(id, updatedNote);
-    putPromise
-      .then((result) => {
-        console.dir(result);
-        let updatedNote = result.data;
-        //2. update the state
-        setNotes(
-          notes.map((note) => (note.id === updatedNote.id ? updatedNote : note))
+  const updateData = async (id) => {
+    try {
+      const currentNote = notes.find((note) => note.id === id);
+
+      const updatedNote = {
+        ...currentNote,
+        important: !currentNote.important,
+      };
+
+      const result = await noteService.update(id, updatedNote);
+
+      const updated = result.data;
+
+      setNotes(
+        notes.map((note) =>
+          note.id === updated.id ? updated : note
+        )
+      );
+
+    } catch (err) {
+
+      const currentNote = notes.find((note) => note.id === id);
+
+      if (err.response?.status === 404) {
+
+        setNotification(
+          `sorry this note "${currentNote.content}" does not exist`
         );
-      })
-      .catch((err) => {
-        if (err.response.status === 404) {
-          setNotification(
-            `sorry this note "${currentNote.content}" does not exist`
-          );
-          setTimeout(() => {
-            setNotification("");
-          }, 2000);
-          setNotes(notes.filter((note) => note.id !== currentNote.id));
-        } else {
-          console.log("this is some other error");
-        }
-      });
+
+        setTimeout(() => {
+          setNotification("");
+        }, 2000);
+
+        setNotes(notes.filter((note) => note.id !== currentNote.id));
+
+      } else {
+        console.log("some other error");
+      }
+    }
   };
 
   const myStyle = { fontSize: "50px" };
 
   async function handleLogin(event) {
     event.preventDefault();
-    let myUser= await userService.login({username, password});
+
+    const myUser = await userService.login({ username, password });
+
     setUser(myUser);
+
     noteService.setToken(myUser.token);
+
     window.localStorage.setItem("myAuth", JSON.stringify(myUser));
   }
 
@@ -133,21 +147,25 @@ const App = () => {
   }
 
   return (
-    <>
+   <>
       <h1 style={myStyle} className="redbackground">
         Notes
       </h1>
+
       <Notification message={notification} />
+
       {!user && loginForm()}
+
       <br />
+
       {user && (
         <div>
-          <p>{user.name} logged in </p>
+          <p>{user.name} logged in</p>
           {notesForm()}
         </div>
       )}
-      <br />
 
+      <br />
       <button onClick={handleShowAll}>
         show {showAll ? "important" : "all"}
       </button>

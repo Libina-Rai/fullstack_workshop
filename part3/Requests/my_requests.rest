@@ -6,7 +6,7 @@ GET http://localhost:3001/api/notes/1
 ###
 POST http://localhost:3001/api/notes
 content-type: application/json
-Authorization: Bearer <PASTE_TOKEN_HERE>
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InByaXlhX3JhaTMzIiwiaWQiOiI2OWE3ZDBhM2MwMjFiNDU1YmEyMGZhNmIiLCJpYXQiOjE3NzMzODc3NTcsImV4cCI6MTc3MzM4Nzc4N30.dFXDZWtfbRSeBILcxcq9-mBQSg8EGUbYhXcFiy2JZC4
 
 {
     "content": "another sample1",
