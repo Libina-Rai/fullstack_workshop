@@ -3,6 +3,8 @@ import Note from "./components/Note";
 import noteService from "./services/notes";
 import userService from "./services/login";
 import Notification from "./components/Notification";
+import LoginForm from "./components/LoginForm";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
@@ -102,35 +104,21 @@ const App = () => {
     window.localStorage.setItem("myAuth", JSON.stringify(myUser));
   }
 
-  function loginForm() {
+  const loginForm = () => {
+    
     return (
-    <>
-      <h2>Login</h2>
-      <form onSubmit = {handleLogin}>
-        <div>
-          <label>
-            username
-            <input
-              type="text"
-              value={username}
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            password
-            <input
-              type="password"
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </label>
-        </div>
-        <button type="submit">login</button>
-      </form>
-    </>
-    );
+      <>
+        <Togglable buttonLabel="Login Toggle">
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>
+      </>
+    )
   }
 
   function notesForm() {
