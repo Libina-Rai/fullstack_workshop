@@ -1,7 +1,7 @@
 const Note = ({ note, updateNote }) => {
   return (
-    <li>
-      {note.content}{" "}
+    <li className="note">
+      Your awesome note: {note.content}{" "}
       <button onClick={updateNote}>
         change {note.important ? "true" : "false"}
       </button>
