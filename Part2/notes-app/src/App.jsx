@@ -137,13 +137,13 @@ const App = () => {
         show {showAll ? "important" : "all"}
       </button>
       <ul>
-        {notesToShow.map((value) => {
+        {notesToShow.map((note) => {
           return (
             <Note
-              key={value.id}
-              note={value}
+              key={note.id}
+              note={note}
               updateNote={() => {
-                updateData(value.id);
+                updateData(note.id);
               }}
             />
           );
