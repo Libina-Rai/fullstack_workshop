@@ -1,26 +1,31 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
+  root: "src",
   plugins: [
     react({
-      fastRefresh: false
-    })
+      fastRefresh: false,
+    }),
   ],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
+      "/api": {
+        target: "http://localhost:3001",
         changeOrigin: true,
-        secure: false
-      }
-    }
+        secure: false,
+      },
+    },
+  },
+  build: {
+    outDir: "../dist",
+    emptyOutDir: true,
   },
   test: {
-    environment: 'jsdom',
+    environment: "jsdom",
     globals: true,
-    setupFiles: './src/testSetup.js',
-    include: ['src/**/*.test.{js,jsx}'],
-    threads: false
-  }
-})
+    setupFiles: "./testSetup.js",
+    include: ["src/**/*.test.{js,jsx}"],
+    threads: false,
+  },
+});

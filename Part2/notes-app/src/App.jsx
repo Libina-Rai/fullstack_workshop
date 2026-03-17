@@ -11,34 +11,32 @@ const App = () => {
   const [notes, setNotes] = useState([]);
   const [showAll, setShowAll] = useState(true);
   const [notification, setNotification] = useState("");
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const noteFormRef = useRef();
 
   useEffect(() => {
-     const fetchNotes = async () => {   
-      const myData = await noteService.getAll();   
-      myData.push({ id: 1000, content: "this is fake note", important: true });
+    const fetchNotes = async () => {
+      const myData = await noteService.getAll();
       setNotes(myData);
     };
 
     fetchNotes();
-
   }, []);
 
   const notesToShow = notes.filter((note) => (showAll ? true : note.important));
 
-   const createNote = async (noteObject) => {
+  const createNote = async (noteObject) => {
     noteFormRef.current.toggleVisibility();
     try {
-      const newNote = await noteService.create(noteObject);  // returns response.data now
+      const newNote = await noteService.create(noteObject); // returns response.data now
       if (newNote && newNote.id) {
         setNotes(notes.concat(newNote));
       }
     } catch (err) {
-      setNotification('Error creating note');
-      setTimeout(() => setNotification(''), 2000);
+      setNotification("Error creating note");
+      setTimeout(() => setNotification(""), 2000);
     }
   };
 
@@ -55,24 +53,15 @@ const App = () => {
         important: !currentNote.important,
       };
 
-      const result = await noteService.update(id, updatedNote);
+      const updated = await noteService.update(id, updatedNote);
 
-      const updated = result.data;
-
-      setNotes(
-        notes.map((note) =>
-          note.id === updated.id ? updated : note
-        )
-      );
-
+      setNotes(notes.map((note) => (note.id === updated.id ? updated : note)));
     } catch (err) {
-
       const currentNote = notes.find((note) => note.id === id);
 
       if (err.response?.status === 404) {
-
         setNotification(
-          `sorry this note "${currentNote.content}" does not exist`
+          `sorry this note "${currentNote.content}" does not exist`,
         );
 
         setTimeout(() => {
@@ -80,7 +69,6 @@ const App = () => {
         }, 2000);
 
         setNotes(notes.filter((note) => note.id !== currentNote.id));
-
       } else {
         console.log("some other error");
       }
@@ -102,7 +90,6 @@ const App = () => {
   }
 
   const loginForm = () => {
-    
     return (
       <>
         <Togglable buttonLabel="Login Toggle">
@@ -115,21 +102,19 @@ const App = () => {
           />
         </Togglable>
       </>
-    )
-  }
+    );
+  };
 
   function notesForm() {
     return (
       <Togglable buttonLabel="New Note" ref={noteFormRef}>
-        <NotesForm
-          createNote={createNote}
-        />
+        <NotesForm createNote={createNote} />
       </Togglable>
     );
   }
 
   return (
-   <>
+    <>
       <h1 style={myStyle} className="redbackground">
         Notes
       </h1>
