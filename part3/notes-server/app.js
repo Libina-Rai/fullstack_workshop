@@ -16,8 +16,9 @@ app.use(express.static("dist"));
 console.log("the port is", process.env.PORT);
 console.log("the environment is", process.env.NODE_ENV);
 
-mongoose.connect(config.MONGODB_URI)
-  .then(( ) => {
+mongoose
+  .connect(config.MONGODB_URI)
+  .then(() => {
     console.log("connected to MongoDB");
   })
   .catch((error) => {
@@ -29,6 +30,11 @@ app.use(middleware.requestLogger);
 app.use("/api/notes", notesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);
+
+if (process.env.NODE_ENV !== "production") {
+  const testingRouter = require("./controllers/testing");
+  app.use("/api/testing", testingRouter);
+}
 
 // --- Unknown endpoint handler ---
 app.use(middleware.unknownEndpoint);
