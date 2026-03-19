@@ -51,20 +51,18 @@ describe("Note app", () => {
         .first();
       await expect(note).toBeVisible();
     });
-    describe("and a note exists", () => {
+    describe("and several notes exist", () => {
       beforeEach(async ({ page }) => {
-        await createNote(page, 'another note by playwright')
+        await createNote(page, 'first note')
+        await createNote(page, 'second note')
       });
 
-      test("importance can be changed", async ({ page }) => {
-        const note = page
-          .locator(".note")
-          .filter({ hasText: "another note by playwright" })
-          .first();
-        const importanceButton = note.getByRole("button", { name: "true" });
-        await importanceButton.click();
-        await expect(note.getByRole("button", { name: "false" })).toBeVisible();
-      });
+      test("one of those can be made nonimportant", async ({ page }) => {
+        const otherNoteElement = page.getByText("second note")
+
+        await otherNoteElement.getByRole("button", { name: "true" }).click()
+        await expect(otherNoteElement.getByText("false")).toBeVisible()
+    });
     });
     // test('login fails with wrong password', async ({ page }) => {
     //   await loginWith(page, 'priya_rai33', 'wrongpassword')
