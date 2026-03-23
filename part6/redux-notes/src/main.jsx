@@ -1,52 +1,23 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { store, toggleImportanceOf } from "./reducers/noteReducer";
-import NewNote from "./components/NewNote";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import noteReducer from "./reducers/noteReducer";
+import App from "./App";
 
-store.dispatch({
-  type: "NEW_NOTE",
-  payload: {
-    content: "the app state is in redux store",
-    important: true,
-    id: 1,
-  },
-});
+export const store = createStore(noteReducer);
 
-store.dispatch({
-  type: "NEW_NOTE",
-  payload: {
-    content: "state changes are made with actions",
-    important: false,
-    id: 2,
-  },
-});
+createRoot(document.getElementById("root")).render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
 
-const App = () => {
-  return (
-    <div>
-      <NewNote />
-      <ul>
-        {store.getState().map((note) => (
-          <li
-            key={note.id}
-            onClick={() =>
-              store.dispatch(toggleImportanceOf(note.id))
-            }
-          >
-            {note.content}{" "}
-            <strong>{note.important ? "important" : "not important"}</strong>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
+// let myRoot = createRoot(document.getElementById("root"));
 
-let myRoot = createRoot(document.getElementById("root"));
+// function myRender() {
+//   myRoot.render(<App />);
+// }
 
-function myRender() {
-  myRoot.render(<App />);
-}
-
-store.subscribe(myRender);
-myRender();
+// myRender();
+// store.subscribe(myRender);

@@ -1,4 +1,3 @@
-import { createStore } from "redux";
 const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 const noteReducer = (state=[], action) => {
   if (action.type === "NEW_NOTE") {
@@ -16,8 +15,6 @@ const noteReducer = (state=[], action) => {
   }
   return state;
 };
-
-export const store = createStore(noteReducer, []);
 
 export const createNote = (content) => {
   return {
