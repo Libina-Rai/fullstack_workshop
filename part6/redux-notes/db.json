@@ -19,6 +19,12 @@
       "content": "my new note",
       "important": false,
       "id": "d0xzLPffS1E"
+    },
+    {
+      "content": "new node with thunk",
+      "important": false,
+      "id": "QYtIvmfXhys"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
