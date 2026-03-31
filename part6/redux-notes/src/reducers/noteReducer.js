@@ -2,32 +2,35 @@ import { createSlice } from "@reduxjs/toolkit";
 
 //slice -> reducer, action -> object, state -> array of objects
 
-const initialState = [
-  {
-    content: "Reducer defines how state works",
-    important: true,
-    id: 1,
-  },
-  {
-    content: "state or store can contain any data",
-    important: false,
-    id: 2,
-  },
-];
+// const initialState = [
+//   {
+//     content: "Reducer defines how state works",
+//     important: true,
+//     id: 1,
+//   },
+//   {
+//     content: "state or store can contain any data",
+//     important: false,
+//     id: 2,
+//   },
+// ];
 
 const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
 const noteSlice = createSlice({
   name: "notes",
-  initialState,
+  initialState: [],
   reducers: {
     createNote(state, action) {
       const content = action.payload;
-      state.push({
+      return state.concat({
         content,
         important: false,
         id: generateId(),
       });
+    },
+    addAllNotes(state, action) {
+      return state.concat(action.payload);
     },
     toggleImportanceOf(state, action) {
       const id = action.payload;
@@ -41,5 +44,6 @@ const noteSlice = createSlice({
   },
 });
 
-export const { createNote, toggleImportanceOf } = noteSlice.actions;
+export const { createNote, toggleImportanceOf, addAllNotes } =
+  noteSlice.actions;
 export default noteSlice.reducer;
