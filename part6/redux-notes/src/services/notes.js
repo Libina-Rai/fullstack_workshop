@@ -4,7 +4,16 @@ const baseUrl = "http://localhost:3001/notes"; // This is the URL of the JSON se
 
 const getAll = async () => {
   const response = await axios.get(baseUrl);
-  return response.data; 
+  return response.data;
 };
 
-export { getAll };
+const postNewNote = async (content) => {
+  const newNote = {
+    content,
+    important: false,
+  };
+  const response = await axios.post(baseUrl, newNote);
+  return response.data;
+};
+
+export { getAll, postNewNote };
