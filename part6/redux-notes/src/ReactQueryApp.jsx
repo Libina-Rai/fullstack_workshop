@@ -1,0 +1,46 @@
+import { useQuery } from "@tanstack/react-query";
+import { getAll } from "./services/result";
+
+const App = () => {
+  //allows us to fetch data and manage the state of that data
+  const result = useQuery({
+    queryKey: ["notes"],
+    queryFn: getAll,
+  });
+
+  if (result.isLoading) {
+    return <div>Loading data...</div>;
+  }
+
+  const addNote = async (event) => {
+    event.preventDefault();
+    const content = event.target.note.value;
+    event.target.note.value = "";
+    console.log(content);
+  };
+
+  const toggleImportance = (note) => {
+    console.log("toggle importance of", note.id);
+  };
+
+  const notes = result.data;
+
+  return (
+    <div>
+      <h2>Notes app</h2>
+      <form onSubmit={addNote}>
+        <input name="note" />
+        <button type="submit">add</button>
+      </form>
+      {notes &&
+        notes.map((note) => (
+          <li key={note.id} onClick={() => toggleImportance(note)}>
+            {note.content}
+            <strong> {note.important ? "important" : ""}</strong>
+          </li>
+        ))}
+    </div>
+  );
+};
+
+export default App;
