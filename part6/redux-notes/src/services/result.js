@@ -16,7 +16,7 @@ export const createNote = async (newNote) => {
   return response.json();
 };
 
-export const updateNote = async (updatedNote, id ) => {
+export const updateNote = async ( id, updatedNote ) => {
   const response = await fetch(`${baseUrl}/${id}`, {
     method: "PUT",
     headers: {

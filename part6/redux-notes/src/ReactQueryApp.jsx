@@ -8,19 +8,21 @@ const App = () => {
   const result = useQuery({
     queryKey: ["notes"],
     queryFn: getAll,
+    refetchOnWindowFocus: false,
   });
 
   //allows us to create new data and manage the state of that data
   const newNoteMutation = useMutation({
     mutationFn: createNote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notes"] });
+    onSuccess: (myNote) => {
+      const notes = queryClient.getQueryData(["notes"]);
+      queryClient.setQueryData(["notes"], notes.concat(myNote));
     },
   });
 
   // allows us to update data and manage the state of that data
   const updateNoteMutation = useMutation({
-    mutationFn: updateNote,
+    mutationFn: ({ id, updatedNote }) => updateNote(id, updatedNote),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
     },
