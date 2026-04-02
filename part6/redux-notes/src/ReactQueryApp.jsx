@@ -1,11 +1,29 @@
-import { useQuery } from "@tanstack/react-query";
-import { getAll } from "./services/result";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getAll, createNote, updateNote } from "./services/result";
 
 const App = () => {
+  const queryClient = useQueryClient();
+
   //allows us to fetch data and manage the state of that data
   const result = useQuery({
     queryKey: ["notes"],
     queryFn: getAll,
+  });
+
+  //allows us to create new data and manage the state of that data
+  const newNoteMutation = useMutation({
+    mutationFn: createNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
+    },
+  });
+
+  // allows us to update data and manage the state of that data
+  const updateNoteMutation = useMutation({
+    mutationFn: updateNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
+    },
   });
 
   if (result.isLoading) {
@@ -15,11 +33,16 @@ const App = () => {
   const addNote = async (event) => {
     event.preventDefault();
     const content = event.target.note.value;
+    newNoteMutation.mutate({ content, important: true });
     event.target.note.value = "";
-    console.log(content);
   };
 
   const toggleImportance = (note) => {
+    // toggle importance of the note with the given id
+    updateNoteMutation.mutate({
+      id: note.id,
+      updatedNote: { ...note, important: !note.important },
+    });
     console.log("toggle importance of", note.id);
   };
 

@@ -11,20 +11,9 @@
       "id": "2"
     },
     {
-      "content": "this",
-      "important": false,
-      "id": "hHBYGU9cQHo"
-    },
-    {
-      "content": "my new note",
-      "important": false,
-      "id": "d0xzLPffS1E"
-    },
-    {
-      "content": "new node with thunk",
-      "important": false,
-      "id": "QYtIvmfXhys"
+      "content": "new note",
+      "important": true,
+      "id": "UDzANED7Cbg"
     }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }
