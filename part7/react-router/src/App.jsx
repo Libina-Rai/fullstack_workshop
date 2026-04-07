@@ -9,6 +9,8 @@ import {
 } from "react-router-dom";
 import Notes from "./Notes";
 import Note from "./Note";
+import { useState } from "react";
+import Login from "./Login";
 
 const Home = () => (
   <div>
@@ -42,6 +44,8 @@ const Users = () => {
 };
 
 const App = ({ notes }) => {
+  const [user, setUser] = useState(null);
+
   const padding = {
     padding: 5,
   };
@@ -58,15 +62,24 @@ const App = ({ notes }) => {
         <Link style={padding} to="/users">
           users
         </Link>
+        {user ? (
+          <em>{user} logged in</em>
+        ) : (
+          <Link style={padding} to="/login">
+            login
+          </Link>
+        )}
       </div>
+
       <Routes>
         <Route path="/notes/:id" element={<Note notes={notes} />} />
+        <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/notes" element={<Notes notes={notes} />} />
-        <Route path="/users" element={<Users />} />
+        <Route
+          path="/users"
+          element={user ? <Users /> : <Navigate replace to="/login" />}
+        />
         <Route path="/" element={<Home />} />
-        <Route path="/notes123" element={<Notes notes={notes} />} />
-        <Route path="/notes456" element={<Navigate replace to="/notes" />} />
-
       </Routes>
       <div>
         <i>Note app, Department of Computer Science 2024</i>
