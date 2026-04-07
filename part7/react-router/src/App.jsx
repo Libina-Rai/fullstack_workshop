@@ -4,6 +4,8 @@ import {
   Route,
   Link,
   BrowserRouter,
+  useNavigate,
+  Navigate,
 } from "react-router-dom";
 import Notes from "./Notes";
 import Note from "./Note";
@@ -15,12 +17,29 @@ const Home = () => (
   </div>
 );
 
-const Users = () => (
-  <div>
-    {" "}
-    <h2>Users</h2>{" "}
-  </div>
-);
+const Users = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div>
+      <h2>Users</h2>
+      <button
+        onClick={() => {
+          navigate("/notes123");
+        }}
+      >
+        go to notes123
+      </button>
+      <button
+        onClick={() => {
+          navigate("/notes456");
+        }}
+      >
+        go to notes456
+      </button>
+    </div>
+  );
+};
 
 const App = ({ notes }) => {
   const padding = {
@@ -45,6 +64,9 @@ const App = ({ notes }) => {
         <Route path="/notes" element={<Notes notes={notes} />} />
         <Route path="/users" element={<Users />} />
         <Route path="/" element={<Home />} />
+        <Route path="/notes123" element={<Notes notes={notes} />} />
+        <Route path="/notes456" element={<Navigate replace to="/notes" />} />
+
       </Routes>
       <div>
         <i>Note app, Department of Computer Science 2024</i>
