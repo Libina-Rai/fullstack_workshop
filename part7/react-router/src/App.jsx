@@ -10,7 +10,7 @@ import Notes from "./Notes";
 import Note from "./Note";
 import { useState } from "react";
 import Login from "./Login";
-import { Alert } from "react-bootstrap";
+import { Container, Alert } from "@mui/material";
 
 const Home = () => (
   <div>
@@ -54,7 +54,7 @@ const App = ({ notes }) => {
   const note = match ? notes.find((note) => note.id === match.params.id) : null;
 
   return (
-    <div className="container">
+    <Container>
       <div>
         <Link style={padding} to="/">
           home
@@ -66,7 +66,7 @@ const App = ({ notes }) => {
           users
         </Link>
         {user ? (
-          <Alert variant="success">{user} logged in</Alert>
+          <Alert severity="success">{user} logged in</Alert>
         ) : (
           <Link style={padding} to="/login">
             login
@@ -89,7 +89,7 @@ const App = ({ notes }) => {
       <div>
         <i>Note app, Department of Computer Science 2024</i>
       </div>
-    </div>
+    </Container>
   );
 };
 
