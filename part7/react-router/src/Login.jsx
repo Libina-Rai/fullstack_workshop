@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
 
 const Login = ({ setUser }) => {
-  const navigate = useNavigate();// get the navigate function from the useNavigate hook
+  const navigate = useNavigate(); // get the navigate function from the useNavigate hook
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -10,10 +11,18 @@ const Login = ({ setUser }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" name="username" />
-      <button>submit</button>
-    </form>
+    <>
+      <h2>Login</h2>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>username:</Form.Label>
+          <Form.Control type="text" name="username" />
+          <Button variant="primary" type="submit">
+            submit
+          </Button>
+        </Form.Group>
+      </Form>
+    </>
   );
 };
 

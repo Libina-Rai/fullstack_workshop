@@ -10,6 +10,7 @@ import Notes from "./Notes";
 import Note from "./Note";
 import { useState } from "react";
 import Login from "./Login";
+import { Alert } from "react-bootstrap";
 
 const Home = () => (
   <div>
@@ -53,7 +54,7 @@ const App = ({ notes }) => {
   const note = match ? notes.find((note) => note.id === match.params.id) : null;
 
   return (
-    <>
+    <div className="container">
       <div>
         <Link style={padding} to="/">
           home
@@ -65,7 +66,7 @@ const App = ({ notes }) => {
           users
         </Link>
         {user ? (
-          <em>{user} logged in</em>
+          <Alert variant="success">{user} logged in</Alert>
         ) : (
           <Link style={padding} to="/login">
             login
@@ -88,7 +89,7 @@ const App = ({ notes }) => {
       <div>
         <i>Note app, Department of Computer Science 2024</i>
       </div>
-    </>
+    </div>
   );
 };
 
