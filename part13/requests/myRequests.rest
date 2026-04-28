@@ -4,3 +4,12 @@ Content-Type: application/json
 {
   "content": "note creation with error handling again"
 }
+
+###
+PUT http://localhost:3001/api/notes/2
+Content-Type: application/json
+
+{
+  "important": false
+}
+
